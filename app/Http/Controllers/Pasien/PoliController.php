@@ -25,26 +25,24 @@ class PoliController extends Controller
     }
 
     public function submit(Request $request)
-    {
-        $request->validate([
-            'id_poli' => 'required|exists:poli,id',
-            'id_jadwal' => 'required|exists:jadwal_periksa,id',
-            'keluhan' => 'nullable|string',
-            'id_pasien' => 'required|exists:users,id',
-        ]);
+{
+    $request->validate([
+        'id_poli'   => 'required|exists:poli,id',
+        'id_jadwal' => 'required|exists:jadwal_periksa,id',
+        'keluhan'   => 'required|string',
+    ]);
 
-        $jumlahSudahDaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
+    $jumlahSudahDaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
 
-        DaftarPoli::create([
-            'id_pasien' => $request->id_pasien,
-            'id_jadwal' => $request->id_jadwal,
-            'keluhan' => $request->keluhan,
-            'no_antrian' => $jumlahSudahDaftar + 1,
-        ]);
+    DaftarPoli::create([
+        'id_pasien'  => Auth::id(),
+        'id_jadwal'  => $request->id_jadwal,
+        'keluhan'    => $request->keluhan,
+        'no_antrian' => $jumlahSudahDaftar + 1,
+    ]);
 
-        return redirect()
-            ->back()
-            ->with('message', 'Berhasil Mendaftar ke Poli')
-            ->with('type', 'success');
-    }
+    return redirect()
+        ->back()
+        ->with('success', 'Berhasil mendaftar ke poli');
+}
 }

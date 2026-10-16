@@ -62,7 +62,7 @@
             </div>
 
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">Daftar Poli</button>
+                <button type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white border-none">Daftar Poli</button>
             </div>
         </form>
     </div>
