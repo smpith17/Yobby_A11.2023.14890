@@ -75,11 +75,16 @@ class JadwalPeriksaController extends Controller
     }
 
     public function destroy(string $id)
-    {
-        $jadwal = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
-        $jadwal->delete();
+{
+    $jadwal = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
 
+    if ($jadwal->daftarPolis()->exists()) {
         return redirect()->route('jadwal-periksa.index')
-            ->with('success', 'Jadwal periksa berhasil dihapus');
+            ->with('error', 'Jadwal tidak dapat dihapus karena sudah memiliki pendaftar.');
     }
+
+    $jadwal->delete();
+
+    return redirect()->route('jadwal-periksa.index')->with('success', 'Jadwal periksa berhasil dihapus');
+}
 }

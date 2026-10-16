@@ -53,10 +53,16 @@ class ObatController extends Controller
     }
 
     public function destroy(string $id)
-    {
-        $obat = Obat::findOrFail($id);
-        $obat->delete();
+{
+    $obat = Obat::findOrFail($id);
 
-        return redirect()->route('obat.index')->with('success', 'Obat berhasil dihapus');
+    if ($obat->detailPeriksas()->exists()) {
+        return redirect()->route('obat.index')
+            ->with('error', 'Obat tidak dapat dihapus karena sudah digunakan pada data pemeriksaan.');
     }
+
+    $obat->delete();
+
+    return redirect()->route('obat.index')->with('success', 'Obat berhasil dihapus');
+}
 }
