@@ -26,7 +26,7 @@
                         required>
                         <option value="">-- Pilih Hari --</option>
                         @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $hari)
-                        <option value="{{ $hari }}" @selected(old('hari')===$hari)>{{ $hari }}</option>
+                        <option value="{{ $hari }}" @selected(old('hari') === $hari)>{{ $hari }}</option>
                         @endforeach
                     </select>
                     @error('hari')
@@ -70,10 +70,9 @@
                     <select name="status"
                         class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 focus:border-primary focus:outline-none @error('status') border-red-500 @enderror"
                         required>
-                        <option value="Aktif" @selected(old('status')==='Aktif' )>Aktif</option>
-                        <option value="Nonaktif" @selected(old('status', 'Nonaktif' )==='Nonaktif' )>Nonaktif</option>
+                        <option value="Aktif" @selected(old('status') === 'Aktif')>Aktif</option>
+                        <option value="Nonaktif" @selected(old('status', 'Nonaktif') === 'Nonaktif')>Nonaktif</option>
                     </select>
-                    <p class="text-xs text-slate-400 mt-1">Hanya satu jadwal yang bisa aktif. Jadwal aktif lain akan otomatis dinonaktifkan.</p>
                     @error('status')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror

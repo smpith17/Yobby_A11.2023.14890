@@ -38,11 +38,6 @@ class JadwalPeriksaController extends Controller
     {
         $validated = $request->validate($this->rules());
 
-        // Hanya boleh ada satu jadwal aktif per dokter
-        if ($validated['status'] === 'Aktif') {
-            JadwalPeriksa::where('id_dokter', Auth::id())->update(['status' => 'Nonaktif']);
-        }
-
         $validated['id_dokter'] = Auth::id();
         JadwalPeriksa::create($validated);
 
@@ -53,6 +48,7 @@ class JadwalPeriksaController extends Controller
     public function edit(string $id)
     {
         $jadwal = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
+
         return view('dokter.jadwal-periksa.edit', compact('jadwal'));
     }
 
@@ -62,12 +58,6 @@ class JadwalPeriksaController extends Controller
 
         $validated = $request->validate($this->rules());
 
-        if ($validated['status'] === 'Aktif') {
-            JadwalPeriksa::where('id_dokter', Auth::id())
-                ->where('id', '!=', $jadwal->id)
-                ->update(['status' => 'Nonaktif']);
-        }
-
         $jadwal->update($validated);
 
         return redirect()->route('jadwal-periksa.index')
@@ -75,16 +65,17 @@ class JadwalPeriksaController extends Controller
     }
 
     public function destroy(string $id)
-{
-    $jadwal = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
+    {
+        $jadwal = JadwalPeriksa::where('id_dokter', Auth::id())->findOrFail($id);
 
-    if ($jadwal->daftarPolis()->exists()) {
+        if ($jadwal->daftarPolis()->exists()) {
+            return redirect()->route('jadwal-periksa.index')
+                ->with('error', 'Jadwal tidak dapat dihapus karena sudah memiliki pendaftar.');
+        }
+
+        $jadwal->delete();
+
         return redirect()->route('jadwal-periksa.index')
-            ->with('error', 'Jadwal tidak dapat dihapus karena sudah memiliki pendaftar.');
+            ->with('success', 'Jadwal periksa berhasil dihapus');
     }
-
-    $jadwal->delete();
-
-    return redirect()->route('jadwal-periksa.index')->with('success', 'Jadwal periksa berhasil dihapus');
-}
 }

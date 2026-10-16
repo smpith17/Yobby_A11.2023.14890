@@ -75,7 +75,6 @@
                         <option value="Aktif" @selected(old('status', $jadwal->status) === 'Aktif')>Aktif</option>
                         <option value="Nonaktif" @selected(old('status', $jadwal->status) === 'Nonaktif')>Nonaktif</option>
                     </select>
-                    <p class="text-xs text-slate-400 mt-1">Hanya satu jadwal yang bisa aktif. Jadwal aktif lain akan otomatis dinonaktifkan.</p>
                     @error('status')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
