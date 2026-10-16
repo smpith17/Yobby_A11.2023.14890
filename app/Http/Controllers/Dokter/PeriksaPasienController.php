@@ -28,11 +28,11 @@ class PeriksaPasienController extends Controller
     }
 
     public function create($id)
-    {
-        $obats = Obat::all();
+{
+    $obats = Obat::all();
 
-        return view('components.dokter.periksa-pasien.create', compact('obats', 'id'));
-    }
+    return view('dokter.periksa-pasien.create', compact('obats', 'id'));
+}
 
     public function store(Request $request)
     {

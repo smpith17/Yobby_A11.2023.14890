@@ -1,10 +1,20 @@
 <x-layouts.app title="Periksa Pasien">
 
+    @php
+        $obatList = $obats->map(function ($o) {
+            return [
+                'id'      => $o->id,
+                'nama'    => $o->nama_obat,
+                'kemasan' => $o->kemasan,
+                'harga'   => (int) $o->harga,
+            ];
+        })->values();
+    @endphp
+
     {{-- Header --}}
     <div class="flex items-center gap-3 mb-6">
-        <a href="{{ route('periksa-pasien.index') }}"
-            class="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
-            <i class="fas fa-arrow-left text-sm"></i>
+        <a href="{{ route('periksa-pasien.index') }}" class="text-slate-500 hover:text-slate-800 transition">
+            <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="text-2xl font-bold text-slate-800">Periksa Pasien</h2>
     </div>
@@ -73,7 +83,7 @@
                 {{-- Buttons --}}
                 <div class="flex items-center gap-3">
                     <button type="submit"
-                        class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold text-sm transition">
+                        class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#2d4499] hover:bg-[#1e2d6b] text-white rounded-lg font-semibold text-sm transition">
                         <i class="fas fa-save text-sm"></i>
                         Simpan
                     </button>
@@ -89,12 +99,7 @@
 
     @push('scripts')
     <script>
-        const daftarObat = @json($obats->map(fn($o) => [
-            'id' => $o->id,
-            'nama' => $o->nama_obat,
-            'kemasan' => $o->kemasan,
-            'harga' => (int) $o->harga,
-        ]));
+        const daftarObat = @json($obatList);
 
         let terpilih = [];
 
@@ -119,14 +124,14 @@
 
                 const teks = document.createElement('span');
                 teks.className = 'text-sm';
-                teks.textContent = `${obat.nama} - ${obat.kemasan ?? ''} (${rupiah(obat.harga)})`;
+                teks.textContent = obat.nama + ' - ' + (obat.kemasan ?? '') + ' (' + rupiah(obat.harga) + ')';
 
                 const hapus = document.createElement('button');
                 hapus.type = 'button';
                 hapus.className = 'text-red-500 hover:text-red-700 text-sm font-semibold';
                 hapus.textContent = 'Hapus';
-                hapus.addEventListener('click', () => {
-                    terpilih = terpilih.filter(o => o.id !== obat.id);
+                hapus.addEventListener('click', function () {
+                    terpilih = terpilih.filter(function (o) { return o.id !== obat.id; });
                     render();
                 });
 
@@ -137,15 +142,15 @@
             obatKosong.style.display = terpilih.length ? 'none' : 'block';
             totalHarga.value = rupiah(total);
             inputBiaya.value = total;
-            inputJson.value = JSON.stringify(terpilih.map(o => o.id));
+            inputJson.value = JSON.stringify(terpilih.map(function (o) { return o.id; }));
         }
 
-        selectObat.addEventListener('change', () => {
+        selectObat.addEventListener('change', function () {
             const id = parseInt(selectObat.value);
             if (!id) return;
 
-            const obat = daftarObat.find(o => o.id === id);
-            if (obat && !terpilih.some(o => o.id === id)) {
+            const obat = daftarObat.find(function (o) { return o.id === id; });
+            if (obat && !terpilih.some(function (o) { return o.id === id; })) {
                 terpilih.push(obat);
             }
 
@@ -153,7 +158,7 @@
             render();
         });
 
-        document.getElementById('formPeriksa').addEventListener('submit', e => {
+        document.getElementById('formPeriksa').addEventListener('submit', function (e) {
             if (terpilih.length === 0) {
                 e.preventDefault();
                 alert('Pilih minimal satu obat terlebih dahulu.');
