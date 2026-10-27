@@ -39,16 +39,25 @@
                             </td>
 
                             <td class="px-6 py-4 text-right">
-                                @if($daftar->periksas->isNotEmpty())
+                                @if($daftar->status === 'selesai')
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
                                         <i class="fas fa-circle-check"></i> Sudah Diperiksa
                                     </span>
-                                @else
+                                @elseif($daftar->status === 'dilayani')
                                     <a href="{{ route('periksa-pasien.create', $daftar->id) }}"
                                         class="btn btn-sm bg-[#2d4499] hover:bg-[#1e2d6b] text-white border-none rounded-lg px-4">
                                         <i class="fas fa-stethoscope"></i>
                                         Periksa
                                     </a>
+                                @else
+                                    <form action="{{ route('periksa-pasien.panggil', $daftar->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-sm bg-amber-500 hover:bg-amber-600 text-white border-none rounded-lg px-4">
+                                            <i class="fas fa-bullhorn"></i>
+                                            Panggil
+                                        </button>
+                                    </form>
                                 @endif
                             </td>
                         </tr>

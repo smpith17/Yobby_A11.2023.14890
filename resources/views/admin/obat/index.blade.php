@@ -4,11 +4,18 @@
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-slate-800">Data Obat</h2>
 
-        <a href="{{ route('obat.create') }}"
+        <div class="flex gap-2">
+            <a href="{{ route('obat.export') }}"
+                class="btn bg-emerald-600 hover:bg-emerald-700 text-white border-none rounded-lg px-5">
+                <i class="fas fa-file-excel"></i>
+                Export Excel
+            </a>
+            <a href="{{ route('obat.create') }}"
             class="btn bg-[#2d4499] hover:bg-[#1e2d6b] text-white border-none rounded-lg px-5">
             <i class="fas fa-plus"></i>
             Tambah Obat
         </a>
+        </div>
     </div>
 
     {{-- Card --}}
@@ -22,6 +29,7 @@
                             <th class="px-6 py-4">Nama Obat</th>
                             <th class="px-6 py-4">Kemasan</th>
                             <th class="px-6 py-4">Harga</th>
+                            <th class="px-6 py-4">Stok</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -32,6 +40,7 @@
                             <td class="px-6 py-4 font-semibold text-slate-800">{{ $obat->nama_obat }}</td>
                             <td class="px-6 py-4 text-slate-500">{{ $obat->kemasan }}</td>
                             <td class="px-6 py-4 text-slate-700">Rp {{ number_format($obat->harga, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-slate-700">{{ $obat->stok }}</td>
 
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
@@ -56,7 +65,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center py-14 text-slate-400">
+                            <td colspan="5" class="text-center py-14 text-slate-400">
                                 <i class="fas fa-inbox text-3xl mb-3 block"></i>
                                 Belum ada data obat
                             </td>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Dokter;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalPeriksa;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\JadwalPeriksaExport;
 use Illuminate\Support\Facades\Auth;
 
 class JadwalPeriksaController extends Controller
@@ -19,10 +21,16 @@ class JadwalPeriksaController extends Controller
         ];
     }
 
+    public function export()
+    {
+        // id dokter SELALU dari akun yang login, tidak dari input -> tidak bisa export milik dokter lain
+        return Excel::download(new JadwalPeriksaExport(Auth::id()), 'jadwal-periksa.xlsx');
+    }
+
     public function index()
     {
         $jadwals = JadwalPeriksa::where('id_dokter', Auth::id())
-            ->orderByRaw("FIELD(hari, 'Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu')")
+            ->orderByRaw("CASE hari WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 WHEN 'Sabtu' THEN 6 ELSE 7 END")
             ->orderBy('jam_mulai')
             ->get();
 

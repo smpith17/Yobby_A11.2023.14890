@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Poli;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DokterExport;
 use Illuminate\Support\Facades\Hash;
 
 class DokterController extends Controller
 {
+    public function export()
+    {
+        return Excel::download(new DokterExport, 'data-dokter.xlsx');
+    }
+
     public function index()
     {
         $dokters = User::where('role', 'dokter')->with('poli')->get();
